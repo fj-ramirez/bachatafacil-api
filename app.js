@@ -6,8 +6,10 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var chordsRouter = require('./routes/chords');
+var loginRouter = require('./routes/login');
 
 var cors = require('cors');
+var helmet = require('helmet');
 
 var app = express();
 
@@ -18,10 +20,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(helmet());
 app.use(cors());
 
 app.use('/', indexRouter);
 app.use('/chords', chordsRouter);
+app.use('/login', loginRouter);
 
 
 // catch 404 and forward to error handler
@@ -37,7 +41,7 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.send(res.locals.message);
 });
 
 
